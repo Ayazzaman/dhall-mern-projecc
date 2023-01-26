@@ -3,7 +3,6 @@ const app = express();
 const mongoose = require('mongoose');
 const UserModel = require('./models/users');
 const cors = require("cors");
-const cheerio = require("cheerio");
 const axios = require('axios');
 
 const { JSDOM } = require('jsdom');
@@ -20,15 +19,23 @@ app.get("/initData", (req, res) => {
     axios
     .get("https://mun.campusdish.com/en/locationsandmenus/gushuedininghall/")
     .then((response) => {
-        ///console.log(response.data);
-        const $ = cheerio.load(response.data);
-        ///const htmlElement = $(".text/javascript");
 
         const { document } = new JSDOM(response.data).window;
 
         const scripts = document.getElementsByTagName("script");
-        console.log(scripts[16].outerHTML);
-        ///console.log(response.data);        
+        var htmlCode = scripts[16].innerHTML.toString();
+        var index = 0;
+        for(var i = 0; i < htmlCode.length; i++){
+            if(htmlCode.charAt(i)+htmlCode.charAt(i+1)+htmlCode.charAt(i+2)+htmlCode.charAt(i+3)+htmlCode.charAt(i+4) == "model"){
+                index = i;
+                break;
+            }
+        }
+
+        //console.log(htmlCode.substring(index + 7, htmlCode.length -3));
+        res.json(JSON.parse(JSON.stringify(htmlCode.substring(index + 7, htmlCode.length -3))));
+
+        
        
     })
     .catch((error) => {
