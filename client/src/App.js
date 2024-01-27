@@ -6,9 +6,6 @@ function App() {
     <div  className="App">
       <header className="App-header">
         <img id='object-position-1'src={logo}  className='App-logo' alt="logo"/>
-        <p>
-          React
-        </p>
       </header>
       <h1>
       </h1>
